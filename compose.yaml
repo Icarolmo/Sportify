@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ifootball
+      MYSQL_USER: su
+      MYSQL_PASSWORD: pass
+    ports:
+      - "3306:3306"
+#    networks:
+#      - ifootball-network
+#
+#  application:
+#    image: ifootball:1.0
+#    container_name: ifootball-app-service
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - mysql
+#    networks:
+#      - ifootball-network
+
+#networks:
+#  ifootball-network:
+#    driver: bridge
