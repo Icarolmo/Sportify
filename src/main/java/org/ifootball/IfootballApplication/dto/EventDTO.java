@@ -19,7 +19,7 @@ public class EventDTO {
 
     private String type;
 
-    private String time;
+    private String time_event;
 
     private Integer number_of_person;
 
@@ -28,7 +28,7 @@ public class EventDTO {
     public EventDTO(Event event) {
         this.name = event.getName();
         this.type = event.getType();
-        this.time = event.getTime();
+        this.time_event = event.getTime_event();
         this.number_of_person = event.getNumber_of_person();
         this.localization = event.getLocalization();
     }

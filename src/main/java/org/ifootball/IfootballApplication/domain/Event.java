@@ -26,8 +26,8 @@ public class Event {
     @Column(name = "type")
     private String type;
 
-    @Column(name = "time")
-    private String time;
+    @Column(name = "time_event")
+    private String time_event;
 
     @Column(name = "number_of_person")
     private Integer number_of_person;
@@ -38,7 +38,7 @@ public class Event {
     public Event(EventDTO eventDTO) {
         this.name = eventDTO.getName();
         this.type = eventDTO.getType();
-        this.time = eventDTO.getTime();
+        this.time_event = eventDTO.getTime_event();
         this.number_of_person = eventDTO.getNumber_of_person();
         this.localization = eventDTO.getLocalization();
     }
