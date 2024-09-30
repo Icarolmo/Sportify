@@ -6,24 +6,25 @@ services:
     container_name: mysql-db
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: ifootball
+      MYSQL_DATABASE: sportify
       MYSQL_USER: su
       MYSQL_PASSWORD: pass
     ports:
       - "3306:3306"
+
 #    networks:
-#      - ifootball-network
+#      - sportify-network
 #
 #  application:
-#    image: ifootball:1.0
-#    container_name: ifootball-app-service
+#    image: sportify:1.0
+#    container_name: sportify-app-service
 #    ports:
 #      - "8080:8080"
 #    depends_on:
 #      - mysql
 #    networks:
-#      - ifootball-network
+#      - sportify-network
 
 #networks:
-#  ifootball-network:
+#  sportify-network:
 #    driver: bridge

@@ -1,10 +1,10 @@
-package org.ifootball.IfootballApplication;
+package org.sportify.SportifyApplication;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class IfootballApplicationTests {
+class SportifyApplicationTests {
 
 	@Test
 	void contextLoads() {

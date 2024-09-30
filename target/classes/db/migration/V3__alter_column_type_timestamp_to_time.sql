@@ -1,0 +1,3 @@
+ALTER TABLE events
+MODIFY COLUMN start_hour TIME,
+MODIFY COLUMN end_hour TIME;
