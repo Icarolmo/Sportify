@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.logging.log4j.util.Strings;
 import org.sportify.SportifyApplication.dto.EventDTO;
 import org.sportify.SportifyApplication.enums.StatusEnum;
 import org.sportify.SportifyApplication.exception.EventBodyWithIncorrectDataException;
@@ -103,6 +104,15 @@ public class Event {
                 );
 
         return eventDTOList;
+    }
+
+    public static void ValidateActivityTitle(String activityTitle){
+        if(Strings.isBlank(activityTitle)){
+            throw new EventBodyWithIncorrectDataException("activity_title cannot be blank");
+        }
+        if(activityTitle.length() > 20 || activityTitle.length() < 3) {
+            throw new EventBodyWithIncorrectDataException("activity_title must be between 3 and 20 characters");
+        }
     }
 
     public void ValidateEvent(){

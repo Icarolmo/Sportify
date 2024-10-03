@@ -8,7 +8,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.sportify.SportifyApplication.dto.ActitivyTitle;
+import org.sportify.SportifyApplication.domain.Event;
+import org.sportify.SportifyApplication.dto.ActivityTitle;
 import org.sportify.SportifyApplication.dto.EventDTO;
 import org.sportify.SportifyApplication.service.EventService;
 import org.springdoc.core.annotations.ParameterObject;
@@ -61,17 +62,28 @@ public class EventController {
     @Operation(summary = "Realiza a exclusão de um evento.", method = "POST")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "exclusão do evento feita com sucesso.",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = EventDTO.class))),
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ActivityTitle.class))),
             @ApiResponse(responseCode = "400", description = "requisição mal feita ou dado faltante.",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "erro do servidor na exclusão do evento.",
                     content = @Content)
     })
     @DeleteMapping( value = "/delete", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity deleteEvent(@ParameterObject @RequestBody @Validated ActitivyTitle actitivyTitle) {
-        service.deleteEvent(actitivyTitle);
+    public ResponseEntity deleteEvent(@ParameterObject @RequestHeader("User-Agent") String userAgent,
+                                      @RequestHeader("Accept") String accept,
+                                      @RequestHeader("Authorization") String authorization,
+                                      @Validated @RequestBody ActivityTitle activityTitle) {
+        log.info("REQUEST => DELETE EVENT: activity_title [{}]; user-agent: [{}]; accept: [{}]; authorization: [{}]", activityTitle.activity_title(), userAgent, accept, authorization);
 
-        return ResponseEntity.ok().body("DEU TUDO CERTO");
+        Event.ValidateActivityTitle(activityTitle.activity_title());
+
+        log.info("activity_title validate with successfully");
+
+        service.deleteEvent(activityTitle.activity_title());
+
+        log.info("event deleted successfully");
+
+        return ResponseEntity.ok().body("");
     }
 
     @Operation(summary = "Recupera e retorna todos os eventos criados.", method = "GET")

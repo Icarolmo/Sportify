@@ -1,18 +1,19 @@
 package org.sportify.SportifyApplication.service;
 
-import jakarta.validation.constraints.Null;
+import lombok.extern.slf4j.Slf4j;
 import org.sportify.SportifyApplication.domain.Event;
-import org.sportify.SportifyApplication.dto.ActitivyTitle;
 import org.sportify.SportifyApplication.dto.EventDTO;
 import org.sportify.SportifyApplication.enums.StatusEnum;
 import org.sportify.SportifyApplication.exception.EventAlreadyExistsException;
 import org.sportify.SportifyApplication.exception.EventBodyWithIncorrectDataException;
+import org.sportify.SportifyApplication.exception.EventNotExistsException;
 import org.sportify.SportifyApplication.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+@Slf4j
 @Service
 public class EventService {
 
@@ -61,16 +62,17 @@ public class EventService {
         return Event.EventEntityListForEventDTO(eventList.orElse(Collections.emptyList()));
     }
 
-    public EventDTO deleteEvent(ActitivyTitle actitivyTitle){
-        Optional<Event> event = repository.findByActivityTitle(actitivyTitle.activity_title());
+    public void deleteEvent(String actitivyTitle){
+        Optional<Event> event = repository.findByActivityTitle(actitivyTitle);
 
         if(event.isEmpty()){
-            throw new EventAlreadyExistsException("EVENTO NÃO EXISTE MEU CHAPA");
+            log.info("event with activity_title: [{}] not exists. stopping process...", actitivyTitle);
+            throw new EventNotExistsException("event with activity_title: " + actitivyTitle + " not exists");
         }
 
-        repository.delete(event.get());
+        log.info("trying to delete event {}", actitivyTitle);
 
-        return null;
+        repository.delete(event.get());
     }
 
     public EventDTO updateEvent(EventDTO eventDTO){
