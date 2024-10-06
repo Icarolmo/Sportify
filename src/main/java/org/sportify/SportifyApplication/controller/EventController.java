@@ -39,8 +39,21 @@ public class EventController {
                     content = @Content)
     })
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity createEvent(@ParameterObject @RequestBody @Validated EventDTO eventDTO) {
-        return ResponseEntity.ok().body(service.createEvent(eventDTO));
+    public ResponseEntity createEvent(@RequestHeader("User-Agent") String userAgent,
+                                      @RequestHeader("Accept") String accept,
+                                      @RequestHeader("Authorization") String authorization,
+                                      @RequestHeader("Content-Type") String contentType,
+                                      @ParameterObject @RequestBody EventDTO eventDTO) {
+        log.info("REQUEST => CREATE EVENT: user-agent: [{}]; accept: [{}]; authorization: [{}]; content-type: [{}]", userAgent, accept, authorization, contentType);
+
+        Event.IsEmpty(eventDTO);
+        log.info("EVENT: {}", Event.PrintEventDTOData(eventDTO));
+
+        Event.ValidateEvent(eventDTO);
+        log.info("validate event data with succesfully");
+
+        service.createEvent(eventDTO);
+        return ResponseEntity.ok().body(eventDTO);
     }
 
     @Transactional
@@ -69,11 +82,12 @@ public class EventController {
                     content = @Content)
     })
     @DeleteMapping( value = "/delete", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity deleteEvent(@ParameterObject @RequestHeader("User-Agent") String userAgent,
+    public ResponseEntity deleteEvent(@RequestHeader("User-Agent") String userAgent,
                                       @RequestHeader("Accept") String accept,
                                       @RequestHeader("Authorization") String authorization,
-                                      @Validated @RequestBody ActivityTitle activityTitle) {
-        log.info("REQUEST => DELETE EVENT: activity_title [{}]; user-agent: [{}]; accept: [{}]; authorization: [{}]", activityTitle.activity_title(), userAgent, accept, authorization);
+                                      @RequestHeader("Content-Type") String contentType,
+                                      @ParameterObject @RequestBody ActivityTitle activityTitle) {
+        log.info("REQUEST => DELETE EVENT: activity_title [{}]; user-agent: [{}]; accept: [{}]; authorization: [{}]; content-type: [{}]", activityTitle.activity_title(), userAgent, accept, authorization, contentType);
 
         Event.ValidateActivityTitle(activityTitle.activity_title());
 

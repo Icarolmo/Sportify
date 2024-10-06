@@ -30,10 +30,9 @@ public class EventService {
         put("CORRIDA",  "");
     }};
 
-    public EventDTO createEvent(EventDTO eventDTO)
+    public void createEvent(EventDTO eventDTO)
     {
         Event newEvent = new Event(eventDTO, StatusEnum.ACTIVE);
-        newEvent.ValidateEvent();
 
         Optional<Event> eventAlreadyExists = repository.findByActivityTitle(newEvent.getActivityTitle());
         if (eventAlreadyExists.isPresent()){
@@ -45,7 +44,6 @@ public class EventService {
         }
 
         repository.save(newEvent);
-        return eventDTO;
     }
 
     public Collection<EventDTO> getEventAll() {
@@ -77,7 +75,6 @@ public class EventService {
 
     public EventDTO updateEvent(EventDTO eventDTO){
         Event updatedEvent = new Event(eventDTO, StatusEnum.ACTIVE);
-        updatedEvent.ValidateEvent();
 
         Optional<Event> eventAlreadyExists = repository.findByActivityTitle(updatedEvent.getActivityTitle());
         if (eventAlreadyExists.isEmpty()){
