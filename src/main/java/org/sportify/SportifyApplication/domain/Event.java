@@ -107,11 +107,11 @@ public class Event {
     }
 
     public static void ValidateActivityTitle(String activityTitle){
-        if(Strings.isBlank(activityTitle)){
-            throw new EventBodyWithIncorrectDataException("activity_title cannot be blank");
+        if(activityTitle.isBlank()){
+            throw new EventBodyWithIncorrectDataException("activity_title: titulo do evento não pode ser nulo ou vazio");
         }
         if(activityTitle.length() > 20 || activityTitle.length() < 3) {
-            throw new EventBodyWithIncorrectDataException("activity_title must be between 3 and 20 characters");
+            throw new EventBodyWithIncorrectDataException("activity_title: titulo do evento tem que ser maior que 3 e menor que 20 characters");
         }
     }
 
