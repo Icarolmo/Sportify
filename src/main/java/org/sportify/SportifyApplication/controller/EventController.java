@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.sportify.SportifyApplication.domain.Event;
 import org.sportify.SportifyApplication.dto.ActivityTitle;
 import org.sportify.SportifyApplication.dto.EventDTO;
+import org.sportify.SportifyApplication.exception.EventBodyWithIncorrectDataException;
 import org.sportify.SportifyApplication.service.EventService;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Collection;
 
 @RestController
 @Slf4j
@@ -53,6 +56,8 @@ public class EventController {
         log.info("validate event data with succesfully");
 
         service.createEvent(eventDTO);
+        log.info("create event [{}] with succesfully", eventDTO.activity_title());
+
         return ResponseEntity.ok().body(eventDTO);
     }
 
@@ -67,8 +72,23 @@ public class EventController {
                     content = @Content)
     })
     @PostMapping( value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity updateEvent(@ParameterObject @RequestBody @Validated EventDTO eventDTO) {
-        return ResponseEntity.ok().body(service.updateEvent(eventDTO));
+    public ResponseEntity updateEvent(@RequestHeader("User-Agent") String userAgent,
+                                      @RequestHeader("Accept") String accept,
+                                      @RequestHeader("Authorization") String authorization,
+                                      @RequestHeader("Content-Type") String contentType,
+                                      @ParameterObject @RequestBody @Validated EventDTO eventDTO) {
+        log.info("REQUEST => UPDATE EVENT: user-agent: [{}]; accept: [{}]; authorization: [{}]; content-type: [{}]", userAgent, accept, authorization, contentType);
+
+        Event.IsEmpty(eventDTO);
+        log.info("EVENT: {}", Event.PrintEventDTOData(eventDTO));
+
+        Event.ValidateEvent(eventDTO);
+        log.info("validate event data with succesfully");
+
+        service.updateEvent(eventDTO);
+        log.info("updated event [{}] with succesfully", eventDTO.activity_title());
+
+        return ResponseEntity.ok().body(eventDTO);
     }
 
     @Transactional
@@ -95,7 +115,7 @@ public class EventController {
 
         service.deleteEvent(activityTitle.activity_title());
 
-        log.info("event deleted successfully");
+        log.info("event [{}] deleted with successfully", activityTitle);
 
         return ResponseEntity.ok().body("");
     }
@@ -106,8 +126,15 @@ public class EventController {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = EventDTO.class)))
     })
     @GetMapping(value = "/get/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity getEventAll() {
-        return ResponseEntity.ok().body(service.getEventAll());
+    public ResponseEntity getEventAll(@RequestHeader("User-Agent") String userAgent,
+                                      @RequestHeader("Accept") String accept,
+                                      @RequestHeader("Authorization") String authorization,
+                                      @RequestHeader("Content-Type") String contentType) {
+        log.info("REQUEST => GET ALL EVENTS: user-agent: [{}]; accept: [{}]; authorization: [{}]; content-type: [{}]", userAgent, accept, authorization, contentType);
+
+        Collection<EventDTO> allEvents = service.getEventAll();
+
+        return ResponseEntity.ok().body(allEvents);
     }
 
     @Operation(summary = "Recupera uma lista de eventos filtrados por tipo.", method = "GET")
@@ -116,8 +143,22 @@ public class EventController {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = EventDTO.class)))
     })
     @GetMapping(value = "/get/by-type/{type}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity getEventByType(@PathVariable @Validated String type){
-        return ResponseEntity.ok().body(service.getEventByType(type));
+    public ResponseEntity getEventByType(@RequestHeader("User-Agent") String userAgent,
+                                         @RequestHeader("Accept") String accept,
+                                         @RequestHeader("Authorization") String authorization,
+                                         @RequestHeader("Content-Type") String contentType,
+                                         @PathVariable @Validated String type) {
+        log.info("REQUEST => GET EVENTS BY TYPE: type: [{}]; user-agent: [{}]; accept: [{}]; authorization: [{}]; content-type: [{}]", type, userAgent, accept, authorization, contentType);
+
+        if(type.isBlank()){
+            throw new EventBodyWithIncorrectDataException("type: tipo do evento não pode ser nulo ou vazio");
+        }
+
+        Collection<EventDTO> allEventsForThisType = service.getEventByType(type);
+
+        return ResponseEntity.ok().body(allEventsForThisType);
     }
+
+
 
 }

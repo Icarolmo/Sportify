@@ -48,6 +48,7 @@ public class EventService {
 
     public Collection<EventDTO> getEventAll() {
         List<Event> eventList = repository.findAll();
+
         return Event.EventEntityListForEventDTO(eventList);
     }
 
