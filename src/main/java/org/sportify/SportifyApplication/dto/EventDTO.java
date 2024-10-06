@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Size;
 import org.springframework.lang.NonNull;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public record EventDTO(

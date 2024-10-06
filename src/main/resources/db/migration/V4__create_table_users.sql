@@ -1,0 +1,12 @@
+CREATE TABLE IF NOT EXISTS users
+(
+    user_id VARCHAR(250) NOT NULL PRIMARY KEY UNIQUE,
+    first_name VARCHAR(25) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    login VARCHAR(75) NOT NULL UNIQUE,
+    password VARCHAR(250) NOT NULL,
+    role VARCHAR(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8;
+
+CREATE INDEX idx_login ON users (login);
+

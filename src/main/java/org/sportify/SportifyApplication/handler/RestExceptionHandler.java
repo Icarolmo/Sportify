@@ -3,6 +3,7 @@ package org.sportify.SportifyApplication.handler;
 import org.sportify.SportifyApplication.dto.ResponseErrorDTO;
 import org.sportify.SportifyApplication.exception.EventAlreadyExistsException;
 import org.sportify.SportifyApplication.exception.EventBodyWithIncorrectDataException;
+import org.sportify.SportifyApplication.exception.EventNotExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -23,5 +24,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<ResponseErrorDTO> EventAlreadyExistsExceptionHandler(EventAlreadyExistsException exception){
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ResponseErrorDTO(HttpStatus.CONFLICT.value(), exception.getMessage()));
+    }
+
+    @ExceptionHandler(EventNotExistsException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ResponseErrorDTO> EventNotExistsExceptionHandler(EventNotExistsException exception){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseErrorDTO(HttpStatus.NOT_FOUND.value(), exception.getMessage()));
     }
 }

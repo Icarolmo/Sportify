@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.logging.log4j.util.Strings;
 import org.sportify.SportifyApplication.dto.EventDTO;
 import org.sportify.SportifyApplication.enums.StatusEnum;
 import org.sportify.SportifyApplication.exception.EventBodyWithIncorrectDataException;
@@ -105,22 +106,122 @@ public class Event {
         return eventDTOList;
     }
 
-    public void ValidateEvent(){
-        if (this.activityTitle.isEmpty()) {
-            throw new EventBodyWithIncorrectDataException("nome do evento vazio ou nulo.");
+    public static void ValidateActivityTitle(String activityTitle){
+        if(activityTitle.isBlank()){
+            throw new EventBodyWithIncorrectDataException("activity_title: titulo do evento não pode ser nulo ou vazio");
         }
-        if (this.date == null) {
-            throw new EventBodyWithIncorrectDataException("horário do evento vazio ou nulo.");
-        }
-        if (LocalDateTime.of(this.date, this.startHour).isBefore(LocalDateTime.now())) {
-            throw new EventBodyWithIncorrectDataException("o horário/data do evento a ser criado já passou.");
-        }
-        if (LocalTime.of(this.endHour.getHour(), this.endHour.getMinute(), this.endHour.getSecond())
-                .isBefore(this.startHour)){
-            throw new EventBodyWithIncorrectDataException("o horário de encerramento do evento é anterior ao de inicío.");
-        }
-        if (this.localization.isEmpty()) {
-            throw new EventBodyWithIncorrectDataException("localização do evento vazia ou nula.");
+        if(activityTitle.length() > 20 || activityTitle.length() < 3) {
+            throw new EventBodyWithIncorrectDataException("activity_title: titulo do evento tem que ser maior que 3 e menor que 20 characters");
         }
     }
+
+    public static void IsEmpty(EventDTO eventDTO){
+        boolean isValid = true;
+        StringBuilder errorMessage = new StringBuilder();
+        if (eventDTO == null) {
+            throw new EventBodyWithIncorrectDataException("corpo da requisição nulo ou vazio.");
+        }
+        if (eventDTO.activity_title() == null) {
+            errorMessage.append("activity_title: ").append("titulo do evento vazio ou nulo. ");
+            isValid = false;
+        }
+        if (eventDTO.type() == null) {
+            errorMessage.append("type: ").append("tipo do evento vazio ou nulo. ");
+            isValid = false;
+        }
+        if (eventDTO.localization() == null || eventDTO.localization().isEmpty()) {
+            errorMessage.append("localization: ").append("localizao do evento vazio ou nulo. ");
+            isValid = false;
+        }
+        if (eventDTO.date() == null) {
+            errorMessage.append("date: ").append("data do evento vazio ou nulo. ");
+            isValid = false;
+        }
+        if (eventDTO.start_hour() == null) {
+            errorMessage.append("start_hour: ").append("horário de inicio do evento vazio ou nulo. ");
+            isValid = false;
+        }
+        if (eventDTO.end_hour() == null) {
+            errorMessage.append("end_hour: ").append("horário de termino do evento vazio ou nulo. ");
+            isValid = false;
+        }
+        if (eventDTO.privacy() == null || eventDTO.privacy().isEmpty()) {
+            errorMessage.append("privacy: ").append("privacidade do evento vazio ou nulo. ");
+            isValid = false;
+        }
+        if (eventDTO.number_of_person() <= 0) {
+            errorMessage.append("number_of_person: ").append("numero de pessoas participantes do evento vazio ou nulo. ");
+            isValid = false;
+        }
+
+        if(!isValid){
+            throw new EventBodyWithIncorrectDataException(errorMessage.toString());
+        }
+    }
+
+    public static void ValidateEvent(EventDTO eventDTO){
+        boolean eventIsValid = true;
+        StringBuilder errorMessage = new StringBuilder();
+        if(eventDTO == null){
+            throw new EventBodyWithIncorrectDataException("corpo/body da requisição é nulo ou vazio.");
+        }
+        if(eventDTO.activity_title().isEmpty() || eventDTO.activity_title().length() < 3 || eventDTO.activity_title().length() > 20) {
+            errorMessage.append("activity_title: ").append("nome do evento vazio, nulo ou tamanho inválido menor que 3 caracteres ou maior que 20 caracteres.");
+            eventIsValid = false;
+        }
+        if(eventDTO.localization().isEmpty()) {
+            errorMessage.append("localization: ").append("localização do evento vazia.");
+            eventIsValid = false;
+        }
+        if(eventDTO.type().isEmpty()) {
+            errorMessage.append("type: ").append("tipo do evento vazio.");
+            eventIsValid = false;
+        }
+        if(eventDTO.date() == null) {
+            errorMessage.append("date: ").append("horário do evento vazio ou nulo.");
+            eventIsValid = false;
+        }
+        if(LocalDateTime.of(eventDTO.date(), eventDTO.start_hour()).isBefore(LocalDateTime.now())) {
+            errorMessage.append("date/start_hour: ").append("o horário/data do evento a ser criado já passou.");
+        }
+        if(LocalTime.of(eventDTO.end_hour().getHour(), eventDTO.end_hour().getMinute(), eventDTO.end_hour().getSecond())
+                .isBefore(eventDTO.start_hour())){
+            errorMessage.append("start_hour/end_hour: ").append("o horário de encerramento do evento é anterior ao de inicío.");
+            eventIsValid = false;
+        }
+        if(eventDTO.privacy().isEmpty()){
+            errorMessage.append("privacy: ").append("privacidade do evento vazia.");
+            eventIsValid = false;
+        }
+
+        if(!eventIsValid) {
+            throw new EventBodyWithIncorrectDataException(errorMessage.toString());
+        }
+    }
+
+    public static String PrintEventDTOData(EventDTO eventDTO){
+        return "activity_title: " + eventDTO.activity_title() +
+                "type: " + eventDTO.activity_title() +
+                "description: " + eventDTO.activity_title() +
+                "localization: " + eventDTO.activity_title() +
+                "date: " + eventDTO.activity_title() +
+                "start_hour: " + eventDTO.activity_title() +
+                "end_hour: " + eventDTO.activity_title() +
+                "privacy: " + eventDTO.activity_title() +
+                "number_of_person: " + eventDTO.number_of_person();
+    }
+
+    public String PrintEventData(){
+        return "activity_title: " + this.getActivityTitle() +
+                " type: " + this.getType() +
+                " description: " + this.getDescription() +
+                " localization: " + this.getLocalization() +
+                " date: " + this.getDate() +
+                " start_hour: " + this.getStartHour() +
+                " end_hour: " + this.getEndHour() +
+                " privacy: " + this.getPrivacy() +
+                " number_of_person: " + this.getNumberOfPerson() +
+                " status: " + this.getStatus();
+    }
+
 }
