@@ -5,7 +5,7 @@ import org.sportify.SportifyApplication.domain.Event;
 import org.sportify.SportifyApplication.dto.EventDTO;
 import org.sportify.SportifyApplication.enums.StatusEnum;
 import org.sportify.SportifyApplication.exception.EventAlreadyExistsException;
-import org.sportify.SportifyApplication.exception.EventBodyWithIncorrectDataException;
+import org.sportify.SportifyApplication.exception.RequestBodyWithIncorrectDataException;
 import org.sportify.SportifyApplication.exception.EventNotExistsException;
 import org.sportify.SportifyApplication.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,7 @@ public class EventService {
         }
 
         if(!allowedTypes.containsKey(newEvent.getType())) {
-            throw new EventBodyWithIncorrectDataException(newEvent.getType() + ": tipo de evento inválido, escolha um tipo válido. tipos válidos: FUTEBOL, BASQUETE, VOLEI, HANDEBOL, PINGPONG,FUTEMESA E CORRIDA");
+            throw new RequestBodyWithIncorrectDataException(newEvent.getType() + ": tipo de evento inválido, escolha um tipo válido. tipos válidos: FUTEBOL, BASQUETE, VOLEI, HANDEBOL, PINGPONG,FUTEMESA E CORRIDA");
         }
 
         repository.save(newEvent);
@@ -54,7 +54,7 @@ public class EventService {
 
     public Collection<EventDTO> getEventByType(String type) {
         if(!allowedTypes.containsKey(type)) {
-            throw new EventBodyWithIncorrectDataException(type + ": tipo de evento inválido, escolha um tipo válido. tipos válidos: FUTEBOL, BASQUETE, VOLEI, HANDEBOL, PINGPONG,FUTEMESA E CORRIDA");
+            throw new RequestBodyWithIncorrectDataException(type + ": tipo de evento inválido, escolha um tipo válido. tipos válidos: FUTEBOL, BASQUETE, VOLEI, HANDEBOL, PINGPONG,FUTEMESA E CORRIDA");
         }
 
         Optional<List<Event>> eventList = repository.findByType(type);

@@ -3,7 +3,7 @@ package org.sportify.SportifyApplication.exception;
 public class EventAlreadyExistsException extends RuntimeException {
 
     public EventAlreadyExistsException() {
-        super("Este evento já existe ou um evento existe já existe com este nome.");
+        super("Corpo da requisição mal formada.");
     }
 
     public EventAlreadyExistsException(String message) {

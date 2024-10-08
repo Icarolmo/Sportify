@@ -6,10 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.logging.log4j.util.Strings;
 import org.sportify.SportifyApplication.dto.EventDTO;
 import org.sportify.SportifyApplication.enums.StatusEnum;
-import org.sportify.SportifyApplication.exception.EventBodyWithIncorrectDataException;
+import org.sportify.SportifyApplication.exception.RequestBodyWithIncorrectDataException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -108,10 +107,10 @@ public class Event {
 
     public static void ValidateActivityTitle(String activityTitle){
         if(activityTitle.isBlank()){
-            throw new EventBodyWithIncorrectDataException("activity_title: titulo do evento não pode ser nulo ou vazio");
+            throw new RequestBodyWithIncorrectDataException("activity_title: titulo do evento não pode ser nulo ou vazio");
         }
         if(activityTitle.length() > 20 || activityTitle.length() < 3) {
-            throw new EventBodyWithIncorrectDataException("activity_title: titulo do evento tem que ser maior que 3 e menor que 20 characters");
+            throw new RequestBodyWithIncorrectDataException("activity_title: titulo do evento tem que ser maior que 3 e menor que 20 characters");
         }
     }
 
@@ -119,7 +118,7 @@ public class Event {
         boolean isValid = true;
         StringBuilder errorMessage = new StringBuilder();
         if (eventDTO == null) {
-            throw new EventBodyWithIncorrectDataException("corpo da requisição nulo ou vazio.");
+            throw new RequestBodyWithIncorrectDataException("corpo da requisição nulo ou vazio.");
         }
         if (eventDTO.activity_title() == null) {
             errorMessage.append("activity_title: ").append("titulo do evento vazio ou nulo. ");
@@ -155,7 +154,7 @@ public class Event {
         }
 
         if(!isValid){
-            throw new EventBodyWithIncorrectDataException(errorMessage.toString());
+            throw new RequestBodyWithIncorrectDataException(errorMessage.toString());
         }
     }
 
@@ -163,7 +162,7 @@ public class Event {
         boolean eventIsValid = true;
         StringBuilder errorMessage = new StringBuilder();
         if(eventDTO == null){
-            throw new EventBodyWithIncorrectDataException("corpo/body da requisição é nulo ou vazio.");
+            throw new RequestBodyWithIncorrectDataException("corpo/body da requisição é nulo ou vazio.");
         }
         if(eventDTO.activity_title().isEmpty() || eventDTO.activity_title().length() < 3 || eventDTO.activity_title().length() > 20) {
             errorMessage.append("activity_title: ").append("nome do evento vazio, nulo ou tamanho inválido menor que 3 caracteres ou maior que 20 caracteres.");
@@ -195,7 +194,7 @@ public class Event {
         }
 
         if(!eventIsValid) {
-            throw new EventBodyWithIncorrectDataException(errorMessage.toString());
+            throw new RequestBodyWithIncorrectDataException(errorMessage.toString());
         }
     }
 
