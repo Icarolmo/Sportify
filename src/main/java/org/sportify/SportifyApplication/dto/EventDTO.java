@@ -27,7 +27,5 @@ public record EventDTO(
         @NonNull
         LocalTime end_hour,
         @NonNull
-        String privacy,
-        @NonNull
-        int number_of_person
+        int max_subscribes
 ){};

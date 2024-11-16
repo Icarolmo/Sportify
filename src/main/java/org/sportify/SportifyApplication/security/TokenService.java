@@ -23,7 +23,7 @@ public class TokenService {
             var algorithm = Algorithm.HMAC256(secret);
             var token = JWT.create()
                     .withIssuer("auth-api")
-                    .withSubject(user.getLogin())
+                    .withSubject(user.getEmail())
                     .withExpiresAt(generateExpirateDate())
                     .sign(algorithm);
             return token;
@@ -47,6 +47,6 @@ public class TokenService {
     }
 
     private Instant generateExpirateDate(){
-        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
+        return LocalDateTime.now().plusHours(10).toInstant(ZoneOffset.of("-03:00"));
     }
 }
