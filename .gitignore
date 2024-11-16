@@ -8,8 +8,6 @@
 *.ctxt
 
 # Config files
-*.properties
-*.pem
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/

@@ -11,20 +11,24 @@ services:
       MYSQL_PASSWORD: pass
     ports:
       - "3306:3306"
+    networks:
+      - sportify-network
 
-#    networks:
-#      - sportify-network
-#
-#  application:
-#    image: sportify:1.0
-#    container_name: sportify-app-service
-#    ports:
-#      - "8080:8080"
-#    depends_on:
-#      - mysql
-#    networks:
-#      - sportify-network
+  application:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sportify-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    networks:
+      - sportify-network
 
-#networks:
-#  sportify-network:
-#    driver: bridge
+networks:
+  sportify-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
