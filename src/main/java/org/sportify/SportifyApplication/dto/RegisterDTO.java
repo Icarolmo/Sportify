@@ -1,11 +1,9 @@
 package org.sportify.SportifyApplication.dto;
 
-import org.sportify.SportifyApplication.enums.UserRolesEnum;
-
 public record RegisterDTO(
-        String firstName,
-        String lastName,
-        String login,
+        String first_name,
+        String last_name,
+        String email,
         String password,
-        UserRolesEnum role
+        String role
 ) { }

@@ -2,13 +2,13 @@ package org.sportify.SportifyApplication.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.sportify.SportifyApplication.enums.UserRolesEnum;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 @Table(name = "users")
 @Entity(name = "users")
@@ -21,29 +21,35 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "user_id")
     private String id;
 
+    @Column(name = "first_name")
     private String firstName;
 
+    @Column(name = "last_name")
     private String lastName;
 
-    private String login;
+    @Column(name = "email")
+    private String email;
 
+    @Column(name = "password")
     private String password;
 
-    private UserRolesEnum role;
+    @Column(name = "role")
+    private String role;
 
-    public User(String firstName, String lastName, String login, String password, UserRolesEnum role) {
+    public User(String firstName, String lastName, String email, String password, String role) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.login = login;
+        this.email = email;
         this.password = password;
         this.role = role;
     }
 
     @Override
     public String getUsername() {
-        return login;
+        return email;
     }
 
     @Override
@@ -68,11 +74,10 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (role == UserRolesEnum.ADMIN) {
-            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        if (Objects.equals(role, "ADMIN")) {
+            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
         }
 
         return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
-
 }
