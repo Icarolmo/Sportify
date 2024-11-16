@@ -8,6 +8,13 @@ Para fazer o deploy é preciso ter [Docker](https://www.docker.com/get-started) 
   
 No repositório acompanha o Dockerfile com as etapas de build e deploy da aplicação, o mesmo é utilizado no compose. O compose orquestra o deploy da aplicação subindo um banco de dados MySQL em sua ultima versão e a aplicação utilizando a JRE 20, ambos em containers apartados.
 
+Se quiser durante os testes acompanhar como está o banco de dados no seu Workbeanch por exemplo faça a conexão com o banco de dados com os dados abaixo (os mesmo usados pela aplicação):
+
+- Hostname: 127.0.0.1
+- Port: 3306
+- Username: su
+- Password: pass
+
 ---
 
 ## **Como rodar a aplicação**
