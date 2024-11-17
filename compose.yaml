@@ -11,6 +11,11 @@ services:
       MYSQL_PASSWORD: pass
     ports:
       - "3306:3306"
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - sportify-network
 
@@ -22,7 +27,8 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     networks:
       - sportify-network
 
